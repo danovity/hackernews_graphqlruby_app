@@ -32,6 +32,8 @@ gem 'graphql-errors',          '~> 0.3.0'
 gem 'graphql-batch',           '~> 0.3.10'
 gem 'graphql-preload',         '~> 2.0.1'
 gem 'apollo-tracing',          '~> 1.6.0'
+
+gem 'light-service',           '~> 0.6.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -55,6 +57,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry', '~> 0.12.2'
+  gem 'webmock', '~> 3.7', '>= 3.7.5'
 end
 
 group :development do
