@@ -1,72 +1,69 @@
-# Ruby CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-ruby/ for more details
-#
 version: 2
 jobs:
   build:
-    docker: # run the steps with Docker
-      # specify the version you desire here
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-      - image: circleci/ruby:2.4.1-node-browsers
+    working_directory: ~/myemergencycontactnumber-api
+    docker:
+      - image: circleci/ruby:2.4.1-node
         environment:
-          RAILS_ENV: test
+          RAILS_ENV: continous_integration
           PGHOST: 127.0.0.1
-          PGUSER: circleci
+          PGUSER: rails_test_user
 
-      - image: circleci/postgres:10-alpine-ram
+      - image: circleci/postgres:9.6.3-alpine
         environment:
-          POSTGRES_USER: circleci
-          POSTGRES_DB: awesomeapp_test
+          POSTGRES_USER: rails_test_user
           POSTGRES_PASSWORD: ""
-
-    working_directory: ~/repo
+          POSTGRES_DB: continous_integration
 
     steps:
       - checkout
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "Gemfile.lock" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
+            - myemergencycontactnumber-api-{{ checksum "Gemfile.lock" }}
+            - myemergencycontactnumber-api-
 
       - save_cache:
+          key: rails-demo-{{ checksum "Gemfile.lock" }}
           paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - vendor/bundle
 
-      # Database setup
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:schema:load
-
-      # run tests!
       - run:
-          name: run tests
+          name: Setup Bundler and Gems
           command: |
-            mkdir /tmp/test-results
-            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | \
-              circleci tests split --split-by=timings)"
+            gem install bundler
+            gem update bundler
+            gem install brakeman
+            gem install rubocop
+            gem install rubocop-rspec
+            bundle config without development:test
+            bundle check --path=vendor/bundle || bundle install --without development test --path=vendor/bundle --jobs 4 --retry 3
 
-            bundle exec rspec --format progress \
-                --format RspecJunitFormatter \
-                --out /tmp/test-results/rspec.xml \
-                --format progress \
-                $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+      - run:
+          name: Setup Postgres
+          command: |
+            sudo apt-get install postgresql-client
 
-      # collect reports
+      - run:
+          name: Setup Rails Database
+          command: |
+            RAILS_ENV=continous_integration bundle exec rake db:drop
+            RAILS_ENV=continous_integration bundle exec rake db:setup
+
+      - run:
+          name: Run Brakeman
+          command: |
+            RAILS_ENV=continous_integration brakeman -z
+
+      - run:
+          name: Run Rubocop
+          command: |
+            RAILS_ENV=continous_integration bundle exec rubocop --format fuubar --require rubocop-rspec --config .rubocop.yml
+
+      - run:
+          name: Run Rspec
+          command: |
+            RAILS_ENV=continous_integration bundle exec rspec --format RspecJunitFormatter -o /tmp/test-results/rspec.xml
+
       - store_test_results:
           path: /tmp/test-results
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results
