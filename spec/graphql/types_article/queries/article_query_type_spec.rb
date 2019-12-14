@@ -46,7 +46,7 @@ describe GraphQLSchema do
       )
     }
 
-    it "is successful" do
+    xit "is successful" do
       create_occasion_collections
       create_collection_links
 
