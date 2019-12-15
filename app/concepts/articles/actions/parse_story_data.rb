@@ -1,39 +1,19 @@
 module Articles
-  class Actions::CreateArticles
+  class Actions::ParseStoryData
     extend LightService::Action
-    expects :story_ids, :category_name
+    expects :hackernews_story_data, :nokogiri_story_data, :category_name
+    promises :parsed_story_params
 
     executed do |context|
-      context.story_ids.each do |story_id|
-        begin
-          hackernews_story_data = Utils::ApiRequests.get_story_data(story_id: story_id)
-          nokogiri_story_data = Nokogiri::HTML(open("#{hackernews_story_data.dig("url")}", 'User-Agent' => 'firefox'))
-          next if hackernews_story_data.blank? && nokogiri_story_data.blank?
+      category_name = context.category_name
+      nk_data = context.nokogiri_story_data
+      hn_data = context.hackernews_story_data
 
-          params = parse_params(hackernews_story_data, nokogiri_story_data, context.category_name)
-          next if params.blank?
-
-          article = Article.find_by(hackernews_article_id: hackernews_story_data["id"])
-
-          if article.present?
-            form = ArticleForm.new(article, params)
-          else
-            form = ArticleForm.new(Article.new, params)
-          end
-
-          form.save
-        rescue Exception => error
-          puts "Error"
-        end
-      end
-    end
-
-    def self.parse_params(hn_data, nk_data, story_type)
       description = get_description(nk_data)
       slug = hn_data["title"].parameterize.underscore
       image_url = get_article_image_url(nk_data)
 
-      @params = {
+      parsed_story_params = {
         title: hn_data[ "title" ],
         author_name: hn_data[ "by" ],
         published_at: Time.at(hn_data[ "time" ]),
@@ -42,14 +22,21 @@ module Articles
         article_url: hn_data[ "url" ],
         hackernews_article_id: hn_data[ "id" ],
         slug: slug,
-        section: story_type,
+        section: category_name,
         kids: hn_data["kids"],
         score: hn_data["score"]
       }
+
+      if parsed_story_params.blank?
+        context.fail_and_return!("Failed to parse story data")
+      end
+
+      context.parsed_story_params = parsed_story_params
     end
 
     def self.get_article_image_url(nk_data)
       return 'https://picsum.photos/200/300?grayscale' if nk_data.at("meta[property='og:image']").blank?
+
       nk_data.at("meta[property='og:image']")["content"]
     end
 
@@ -67,4 +54,3 @@ module Articles
     end
   end
 end
-

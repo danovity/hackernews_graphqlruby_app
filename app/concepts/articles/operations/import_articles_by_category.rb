@@ -7,7 +7,7 @@ module Articles
         category_name: category_name
       ).reduce(
         Actions::GetStoryIds,
-        Actions::CreateArticles
+        Actions::ImportArticles
       )
     end
   end
