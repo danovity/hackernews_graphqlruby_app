@@ -1,5 +1,4 @@
 class ArticleForm
-
   # == Constants ============================================================
 
   # == Attributes ===========================================================
@@ -33,8 +32,8 @@ class ArticleForm
   end
 
   def assign_attributes(params)
-    if params["section"].present?
-      section_type = params.delete("section")
+    if params['section'].present?
+      section_type = params.delete('section')
       assign_section(section_type)
     elsif params[:section].present?
       section_type = params.delete(:section)
@@ -89,10 +88,7 @@ class ArticleForm
 
   def merge_errors
     self.article.errors.messages.each do |field, messages|
-      messages.each do |message|
-        errors.add(field, message)
-      end
+      messages.each { |message| errors.add(field, message) }
     end
   end
 end
-

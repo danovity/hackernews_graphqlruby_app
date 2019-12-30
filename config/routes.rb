@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
   if Rails.env.development?
-    mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
+    mount GraphiQL::Rails::Engine, at: '/graphiql', graphql_path: '/graphql'
   end
-  post "/graphql", to: "graphql#execute"
+  post '/graphql', to: 'graphql#execute'
   get 'static/index'
   root 'static#index'
-  get '/check.txt', to: proc {[200, {}, ['it_works']]}
+  get '/check.txt', to: proc { [200, {}, %w[it_works]] }
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
