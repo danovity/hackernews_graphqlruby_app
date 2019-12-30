@@ -1,2 +1,1 @@
-module StaticHelper
-end
+module StaticHelper; end

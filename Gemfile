@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.4.1'
+ruby '2.6.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.3'
@@ -34,6 +34,11 @@ gem 'graphql-preload',         '~> 2.0.1'
 gem 'apollo-tracing',          '~> 1.6.0'
 
 gem 'light-service',           '~> 0.6.0'
+gem 'whenever'
+gem 'prettier'
+gem 'sidekiq'
+gem 'execjs'
+gem 'therubyracer'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production

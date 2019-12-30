@@ -9,7 +9,6 @@
 #       Article.all
 #     end
 
-
 #     # TODO: remove me
 #     field :test_field, String, null: false,
 #       description: "An example field added by the generator"
@@ -19,13 +18,11 @@
 #   end
 # end
 
-Types::QueryType = GraphQL::ObjectType.define do
-  name "Query"
+Types::QueryType =
+  GraphQL::ObjectType.define do
+    name 'Query'
 
-  fields GraphQLUtils::FieldCombiner.combine(
-    [
-      TypesArticle::Queries::ArticleQueryType
-    ]
-  )
-
-end
+    fields GraphQLUtils::FieldCombiner.combine(
+             [TypesArticle::Queries::ArticleQueryType]
+           )
+  end
