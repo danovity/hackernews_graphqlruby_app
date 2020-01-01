@@ -3,7 +3,7 @@ namespace :hackernews_reloaded do
   task import_articles_from_all_categories: :environment do
     ['top', 'best', 'new'].each do |category_name|
       puts "Started Importing Articles for Category: #{category_name}"
-      ImportArticlesByCategoryWorker.perform_async(category_name: category_name)
+      ImportArticlesByCategoryWorker.perform_async(category_name)
     end
   end
 
