@@ -11,7 +11,7 @@ TypesArticle::Queries::ArticleQueryType =
     connection :bestStories,
                !TypesArticle::ArticleType.connection_type,
                'A list of the best stories' do
-      resolve ->(_object, arguments, _context) { 
+      resolve ->(_object, arguments, _context) {
         Article.best_stories
       }
     end
@@ -19,7 +19,7 @@ TypesArticle::Queries::ArticleQueryType =
     connection :newStories,
                !TypesArticle::ArticleType.connection_type,
                'A list of the new stories' do
-      resolve ->(_object, arguments, _context) { 
+      resolve ->(_object, arguments, _context) {
         Article.new_stories
       }
     end
