@@ -19,7 +19,7 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 1.day, at: '4:00 pm' do
+every 1.day, at: '4:30 pm' do
   rake "hackernews_reloaded:delete_all_articles"
   rake "hackernews_reloaded:import_articles_from_all_categories"
 end
