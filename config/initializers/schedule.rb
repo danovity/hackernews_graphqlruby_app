@@ -25,6 +25,7 @@
 # end
 
 require 'rufus-scheduler'
+require 'rubygems'
 
 scheduler = Rufus::Scheduler.new
 
