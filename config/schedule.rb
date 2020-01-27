@@ -19,7 +19,7 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 2.minutes do
-  rake "hackernews_reloaded:delete_all_articles", :environment => 'production'
-  rake "hackernews_reloaded:import_articles_from_all_categories", :environment => 'production'
+every 1.day, at: '1:00 am' do
+  rake "hackernews_reloaded:delete_all_articles"
+  rake "hackernews_reloaded:import_articles_from_all_categories"
 end
