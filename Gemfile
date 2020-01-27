@@ -41,6 +41,7 @@ gem 'execjs'
 gem 'therubyracer'
 gem 'rake'
 gem 'rufus-scheduler'
+gem 'crono'
 gem 'sassc',                   '~> 2.1.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'

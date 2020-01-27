@@ -10,29 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_06_190307) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+ActiveRecord::Schema.define(version: 2020_01_27_223152) do
 
-  create_table 'articles', force: :cascade do |t|
-    t.string 'author_name'
-    t.string 'image_url'
-    t.string 'description'
-    t.datetime 'published_at'
-    t.string 'title'
-    t.string 'article_url'
-    t.string 'slug'
-    t.integer 'hackernews_article_id'
-    t.boolean 'deleted', default: false
-    t.string 'descendants'
-    t.string 'kids'
-    t.integer 'score'
-    t.string 'article_type'
-    t.string 'type'
-    t.boolean 'top_story', default: false
-    t.boolean 'best_story', default: false
-    t.boolean 'new_story', default: false
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "articles", force: :cascade do |t|
+    t.string "author_name"
+    t.string "image_url"
+    t.string "description"
+    t.datetime "published_at"
+    t.string "title"
+    t.string "article_url"
+    t.string "slug"
+    t.integer "hackernews_article_id"
+    t.boolean "deleted", default: false
+    t.string "descendants"
+    t.string "kids"
+    t.integer "score"
+    t.string "article_type"
+    t.string "type"
+    t.boolean "top_story", default: false
+    t.boolean "best_story", default: false
+    t.boolean "new_story", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
+
+  create_table "crono_jobs", force: :cascade do |t|
+    t.string "job_id", null: false
+    t.text "log"
+    t.datetime "last_performed_at"
+    t.boolean "healthy"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_crono_jobs_on_job_id", unique: true
+  end
+
 end
